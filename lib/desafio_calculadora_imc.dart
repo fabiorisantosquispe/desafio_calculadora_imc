@@ -36,7 +36,11 @@ void execute() {
     var imc = calcularIMC(peso, altura);
     var classificacao = classificarIMC(imc);
 
-    print("O IMC de $nome é: $imc");
+    print("\nResultado do cálculo do IMC:");
+    print("Nome: $nome");
+    print("Peso: $peso kg");
+    print("Altura: $altura m");
+    print("IMC: $imc");
     print("Classificação: $classificacao");
 
   } catch (e) {
