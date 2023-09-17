@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'exceptions/custom_exceptions.dart';
@@ -13,11 +14,10 @@ class Pessoa {
 void execute() {
   try {
     print("Digite o nome da pessoa:");
-    var nome = stdin.readLineSync();
+    var nome = stdin.readLineSync(encoding: utf8);
     if (nome == null || nome.isEmpty) {
       throw CampoEmBrancoException();
     }
-    print(nome);
 
     print("Digite o peso (em kg):");
     var pesoInput = stdin.readLineSync();
@@ -25,7 +25,6 @@ void execute() {
     if (peso == null || peso <= 0) {
       throw ValorInvalidoException();
     }
-    print(peso);
 
     print("Digite a altura (em metros):");
     var alturaInput = stdin.readLineSync();
@@ -33,7 +32,13 @@ void execute() {
     if (altura == null || altura <= 0) {
       throw ValorInvalidoException();
     }
-    print(altura);
+
+    var imc = calcularIMC(peso, altura);
+    var classificacao = classificarIMC(imc);
+
+    print("O IMC de $nome é: $imc");
+    print("Classificação: $classificacao");
+
   } catch (e) {
     if (e is CampoEmBrancoException) {
       print("Erro: ${e.mensagem()}");
@@ -42,5 +47,32 @@ void execute() {
     } else {
       print("Erro desconhecido: $e");
     }
+  }
+}
+
+double calcularIMC(double peso, double altura) {
+  if (altura <= 0) {
+    throw ValorInvalidoException();
+  }
+  return peso / (altura * altura);
+}
+
+String classificarIMC(double imc) {
+  if (imc < 16) {
+    return "Magreza Grave";
+  } else if (imc < 17) {
+    return "Magreza Moderada";
+  } else if (imc < 18.5) {
+    return "Magreza Leve";
+  } else if (imc < 25) {
+    return "Saudável";
+  } else if (imc < 30) {
+    return "Sobrepeso";
+  } else if (imc < 35) {
+    return "Obesidade Grau I";
+  } else if (imc < 40) {
+    return "Obesidade Grau II (severa)";
+  } else {
+    return "Obesidade Grau III (mórbida)";
   }
 }
